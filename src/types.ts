@@ -39,6 +39,6 @@ export type Superset2CustomChartBulletProps =
       data: Array<any>;
       indicatorData: Array<any>;
       colorScheme: string;
-      selectedMatrics: string;
+      orderDesc: string;
       // add typing here for the props you pass in from transformProps.ts!
     };

@@ -50,7 +50,7 @@ describe('Superset2CustomChartBullet transformProps', () => {
         { name: 'Hulk', sum__num: 1, __timestamp: new Date(599616000000) },
       ],
       colorScheme: 'bnbColors',
-      selectedMatrics: 'orgname',
+      orderDesc: undefined,
       headerFontSize: 'xs',
       headerText: 'my text',
       indicatorData: [],

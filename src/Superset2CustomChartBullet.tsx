@@ -174,61 +174,79 @@ export default function Superset2CustomChartBullet(
 ) {
   // height and width are the height and width of the DOM element as it exists in the dashboard.
   // There is also a `data` prop, which is, of course, your DATA 🎉
-  let colors:string[];
+  let colors: string[];
   // let newColors;
   let domains;
-  const { data, height, width, colorScheme } = props;
-
+  const { height, width, colorScheme, orderDesc } = props;
+  let { data } = props;
   function creatUniqueArray() {
     const unique = [];
     const distinct = [];
     // const result = [];
-    for( let i = 0; i < data.length; i++ ){
-     if(data[i].metricpossible) {
-      if( !unique[data[i].metricpossible]){
-        distinct.push(data[i]);
-        unique[data[i].metricpossible] = 1;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].metricpossible) {
+        if (!unique[data[i].metricpossible]) {
+          distinct.push(data[i]);
+          unique[data[i].metricpossible] = 1;
+        }
       }
-     }
     }
     return distinct;
   }
-  let indicatorPosition : any;
-  if(data[0].metricpossible) indicatorPosition = data.filter((d:any) => d.metricpossible === data[0].metricvalue)[0].metricvalue;
+  let indicatorPosition: any;
+  let filteredRecords = [];
+  if(data.length > 0) {
+    if (data[0].metricpossible) {
+      filteredRecords = data.filter(
+        (d: any) => d.metricpossible === data[0].metricvalue,
+      );
+    }
+  }
+  if (filteredRecords.length > 0) {
+    indicatorPosition = filteredRecords[0].metricvalue;
+  }
+  orderDesc ? data.sort((a: any, b: any) => a.orderby - b.orderby) : data.sort((a: any, b: any) => b.orderby - a.orderby) ;
   const resultset = creatUniqueArray();
   const colorsValues = categorialSchemeRegistry.values();
   const filterColors: any = colorsValues.filter(
     (c: any) => c.id === colorScheme,
   );
-  if(filterColors[0]) {
+  if (filterColors[0]) {
     colors = [...filterColors[0].colors];
     colors.length = resultset.length;
   }
-  // const colorsArray = filterColors.length === 1 ? filterColors[0].colors : filterColors[1].colors;
 
   const totalCount = resultset.reduce(
-    (initialValue, b: any) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num),
+    (initialValue, b: any) =>
+      initialValue +
+      (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num),
     0,
   );
-  const devidedWidth = totalCount <= 100 ? (100 - totalCount) / resultset.length : 0;
-
+  const devidedWidth =
+    totalCount <= 100 ? (100 - totalCount) / resultset.length : 0;
 
   domains = [];
-  if (data[0].metricpossiblevalues) {
-    domains = d3.extent(data, (d: any) => d.metricpossiblevalues);
-  } else {
-    domains = d3.extent(data, (d: any) => d.sum__num);
+  if(data.length > 0) {
+    if (data[0].metricpossiblevalues) {
+      domains = d3.extent(data, (d: any) => d.metricpossiblevalues);
+    } else {
+      domains = d3.extent(data, (d: any) => d.sum__num);
+    }
+  } else{
+    domains = d3.extent(data, (d: any) => 0);
   }
   const colorScaleEQ = d3Scale
     .scaleQuantize()
     .domain([d3.min(domains), d3.max(domains)])
-    .range(data);
+    .range(data.length > 0 ? data : []);
 
   const bins = colorScaleEQ.range().map(d => colorScaleEQ.invertExtent(d));
   const rootElem = createRef<HTMLDivElement>();
 
   resultset.reduce((acc: any, d: any) => {
-    const color: any = colorScaleEQ(d.metricpossiblevalues ? d.metricpossiblevalues : d.sum__num);
+    const color: any = colorScaleEQ(
+      d.metricpossiblevalues ? d.metricpossiblevalues : d.sum__num,
+    );
     if (acc[color]) {
       acc[color] += 1;
     } else {
@@ -266,9 +284,7 @@ export default function Superset2CustomChartBullet(
         flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%',
       }}
     >
-      <div className="tooltip">
-        {resultset[i].metricpossiblevalues}
-      </div>
+      <div className="tooltip">{resultset[i].metricpossiblevalues}</div>
       <div
         className="tickNums ticksTop tickPointer"
         style={{ width: '100%', textAlign: 'center' }}

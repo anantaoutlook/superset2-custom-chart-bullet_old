@@ -49,13 +49,12 @@ export default function transformProps(chartProps: ChartProps) {
    * be seen until restarting the development server.
    */
   const { width, height, formData, queriesData } = chartProps;
-  const { boldText, headerFontSize, headerText, colorScheme } = formData;
+  const { boldText, headerFontSize, headerText, colorScheme, orderDesc } = formData;
   const data = queriesData[0].data as TimeseriesDataRecord[];
   const indicatorData =
     queriesData.length > 1
       ? (queriesData[1].data as TimeseriesDataRecord[])
       : [];
-  const selectedMatrics = (formData.cols ?? ['orgname'])[0];
 
   return {
     width,
@@ -68,7 +67,7 @@ export default function transformProps(chartProps: ChartProps) {
       __timestamp: new Date(item.__timestamp as number),
     })),
     // and now your control data, manipulated as needed, and passed through as props!
-    selectedMatrics,
+    orderDesc,
     colorScheme,
     boldText,
     headerFontSize,

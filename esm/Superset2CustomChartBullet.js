@@ -190,10 +190,13 @@ export default function Superset2CustomChartBullet(props) {
 
   let domains;
   const {
-    data,
     height,
     width,
-    colorScheme
+    colorScheme,
+    orderDesc
+  } = props;
+  let {
+    data
   } = props;
 
   function creatUniqueArray() {
@@ -213,7 +216,19 @@ export default function Superset2CustomChartBullet(props) {
   }
 
   let indicatorPosition;
-  if (data[0].metricpossible) indicatorPosition = data.filter(d => d.metricpossible === data[0].metricvalue)[0].metricvalue;
+  let filteredRecords = [];
+
+  if (data.length > 0) {
+    if (data[0].metricpossible) {
+      filteredRecords = data.filter(d => d.metricpossible === data[0].metricvalue);
+    }
+  }
+
+  if (filteredRecords.length > 0) {
+    indicatorPosition = filteredRecords[0].metricvalue;
+  }
+
+  orderDesc ? data.sort((a, b) => a.orderby - b.orderby) : data.sort((a, b) => b.orderby - a.orderby);
   const resultset = creatUniqueArray();
   const colorsValues = categorialSchemeRegistry.values();
   const filterColors = colorsValues.filter(c => c.id === colorScheme);
@@ -221,20 +236,23 @@ export default function Superset2CustomChartBullet(props) {
   if (filterColors[0]) {
     colors = [...filterColors[0].colors];
     colors.length = resultset.length;
-  } // const colorsArray = filterColors.length === 1 ? filterColors[0].colors : filterColors[1].colors;
-
+  }
 
   const totalCount = resultset.reduce((initialValue, b) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num), 0);
   const devidedWidth = totalCount <= 100 ? (100 - totalCount) / resultset.length : 0;
   domains = [];
 
-  if (data[0].metricpossiblevalues) {
-    domains = d3.extent(data, d => d.metricpossiblevalues);
+  if (data.length > 0) {
+    if (data[0].metricpossiblevalues) {
+      domains = d3.extent(data, d => d.metricpossiblevalues);
+    } else {
+      domains = d3.extent(data, d => d.sum__num);
+    }
   } else {
-    domains = d3.extent(data, d => d.sum__num);
+    domains = d3.extent(data, d => 0);
   }
 
-  const colorScaleEQ = d3Scale.scaleQuantize().domain([d3.min(domains), d3.max(domains)]).range(data);
+  const colorScaleEQ = d3Scale.scaleQuantize().domain([d3.min(domains), d3.max(domains)]).range(data.length > 0 ? data : []);
   const bins = colorScaleEQ.range().map(d => colorScaleEQ.invertExtent(d));
   const rootElem = /*#__PURE__*/createRef();
   resultset.reduce((acc, d) => {

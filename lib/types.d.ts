@@ -31,7 +31,7 @@ export declare type Superset2CustomChartBulletProps = Superset2CustomChartBullet
     data: Array<any>;
     indicatorData: Array<any>;
     colorScheme: string;
-    selectedMatrics: string;
+    orderDesc: string;
 };
 export {};
 //# sourceMappingURL=types.d.ts.map

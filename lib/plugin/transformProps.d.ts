@@ -23,7 +23,7 @@ export default function transformProps(chartProps: ChartProps): {
     data: {
         __timestamp: Date;
     }[];
-    selectedMatrics: any;
+    orderDesc: any;
     colorScheme: any;
     boldText: any;
     headerFontSize: any;

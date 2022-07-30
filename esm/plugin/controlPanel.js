@@ -19,7 +19,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  * under the License.
  */
 import setupColors from './colorSchemeRegistry';
-import { t, getCategoricalSchemeRegistry } from '@superset-ui/core';
+import { t, getCategoricalSchemeRegistry, validateNonEmpty } from '@superset-ui/core';
 import { sections, sharedControls } from '@superset-ui/chart-controls';
 setupColors();
 const categoricalSchemeRegistry = getCategoricalSchemeRegistry();
@@ -114,7 +114,7 @@ const config = {
       config: _extends({}, sharedControls.metrics, {
         // it's possible to add validators to controls if
         // certain selections/types need to be enforced
-        validators: []
+        validators: [validateNonEmpty]
       })
     }], ['adhoc_filters'],
     /*  [
@@ -182,6 +182,15 @@ const config = {
         renderTrigger: true,
         default: true,
         description: t('A checkbox to make the ')
+      }
+    }, {
+      name: 'order_desc',
+      config: {
+        type: 'CheckboxControl',
+        label: t('Sort descending'),
+        renderTrigger: true,
+        default: true,
+        description: t('Whether to sort descending or ascending')
       }
     }], [{
       name: 'header_font_size',

@@ -17,7 +17,7 @@
  * under the License.
  */
 import setupColors from './colorSchemeRegistry';
-import { t, getCategoricalSchemeRegistry } from '@superset-ui/core';
+import { t, getCategoricalSchemeRegistry, validateNonEmpty } from '@superset-ui/core';
 import {
   ControlPanelConfig,
   sections,
@@ -132,7 +132,7 @@ const config: ControlPanelConfig = {
               ...sharedControls.metrics,
               // it's possible to add validators to controls if
               // certain selections/types need to be enforced
-              validators: [],
+              validators: [validateNonEmpty],
             },
           },
         ],
@@ -214,6 +214,16 @@ const config: ControlPanelConfig = {
               renderTrigger: true,
               default: true,
               description: t('A checkbox to make the '),
+            },
+          },
+          {
+            name: 'order_desc',
+            config: {
+              type: 'CheckboxControl',
+              label: t('Sort descending'),
+              renderTrigger: true,
+              default: true,
+              description: t('Whether to sort descending or ascending'),
             },
           },
         ],

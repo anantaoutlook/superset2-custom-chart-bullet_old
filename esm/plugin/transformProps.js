@@ -19,8 +19,6 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  * under the License.
  */
 export default function transformProps(chartProps) {
-  var _formData$cols;
-
   /**
    * This function is called after a successful response has been
    * received from the chart data endpoint, and is used to transform
@@ -60,11 +58,11 @@ export default function transformProps(chartProps) {
     boldText,
     headerFontSize,
     headerText,
-    colorScheme
+    colorScheme,
+    orderDesc
   } = formData;
   const data = queriesData[0].data;
   const indicatorData = queriesData.length > 1 ? queriesData[1].data : [];
-  const selectedMatrics = ((_formData$cols = formData.cols) != null ? _formData$cols : ['orgname'])[0];
   return {
     width,
     height,
@@ -74,7 +72,7 @@ export default function transformProps(chartProps) {
       __timestamp: new Date(item.__timestamp)
     })),
     // and now your control data, manipulated as needed, and passed through as props!
-    selectedMatrics,
+    orderDesc,
     colorScheme,
     boldText,
     headerFontSize,
