@@ -41,16 +41,5 @@ export default function buildQuery(formData: QueryFormData) {
       is_timeseries: false,
     },
   ]);
-  if (formData.organization_name) {
-    const secondQuery = { ...query.queries[0] };
-    secondQuery.filters = [
-      {
-        col: 'orgname',
-        op: 'IN',
-        val: [formData.organization_name],
-      },
-    ];
-    query.queries.push(secondQuery);
-  }
   return query;
 }

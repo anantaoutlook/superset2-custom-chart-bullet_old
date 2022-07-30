@@ -177,42 +177,47 @@ export default function Superset2CustomChartBullet(
   let colors:string[];
   // let newColors;
   let domains;
-  const { data, height, width, selectedMatrics, colorScheme, indicatorData } = props;
+  const { data, height, width, colorScheme } = props;
 
+  function creatUniqueArray() {
+    const unique = [];
+    const distinct = [];
+    // const result = [];
+    for( let i = 0; i < data.length; i++ ){
+     if(data[i].metricpossible) {
+      if( !unique[data[i].metricpossible]){
+        distinct.push(data[i]);
+        unique[data[i].metricpossible] = 1;
+      }
+     }
+    }
+    return distinct;
+  }
+  let indicatorPosition : any;
+  if(data[0].metricpossible) indicatorPosition = data.filter((d:any) => d.metricpossible === data[0].metricvalue)[0].metricvalue;
+  const resultset = creatUniqueArray();
   const colorsValues = categorialSchemeRegistry.values();
   const filterColors: any = colorsValues.filter(
     (c: any) => c.id === colorScheme,
   );
   if(filterColors[0]) {
     colors = [...filterColors[0].colors];
-    colors.length = data.length;
+    colors.length = resultset.length;
   }
   // const colorsArray = filterColors.length === 1 ? filterColors[0].colors : filterColors[1].colors;
 
-  const totalCount = data.reduce(
+  const totalCount = resultset.reduce(
     (initialValue, b: any) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num),
     0,
   );
-  const devidedWidth = totalCount <= 100 ? (100 - totalCount) / data.length : 0;
+  const devidedWidth = totalCount <= 100 ? (100 - totalCount) / resultset.length : 0;
 
-  function getIndicator(selectedMatric:string) {
-    for (let dataIndex = 0; dataIndex < data.length; dataIndex++) {
-      for (let indicatorIndex = 0; indicatorIndex < indicatorData.length; indicatorIndex++) {
-        if(data[dataIndex][selectedMatric] === indicatorData[indicatorIndex][selectedMatric]) {
-          return indicatorData[indicatorIndex][selectedMatric];
-        }
-      }
-    }
-  }
-  let indicatorPosition = 0;
-  // const indicatorPosition  = getIndicator(selectedMatrics);
+
   domains = [];
   if (data[0].metricpossiblevalues) {
     domains = d3.extent(data, (d: any) => d.metricpossiblevalues);
-    indicatorPosition = getIndicator(selectedMatrics);
   } else {
     domains = d3.extent(data, (d: any) => d.sum__num);
-    indicatorPosition = getIndicator(selectedMatrics);
   }
   const colorScaleEQ = d3Scale
     .scaleQuantize()
@@ -222,7 +227,7 @@ export default function Superset2CustomChartBullet(
   const bins = colorScaleEQ.range().map(d => colorScaleEQ.invertExtent(d));
   const rootElem = createRef<HTMLDivElement>();
 
-  data.reduce((acc: any, d: any) => {
+  resultset.reduce((acc: any, d: any) => {
     const color: any = colorScaleEQ(d.metricpossiblevalues ? d.metricpossiblevalues : d.sum__num);
     if (acc[color]) {
       acc[color] += 1;
@@ -252,23 +257,23 @@ export default function Superset2CustomChartBullet(
     // const root = rootElem.current as HTMLElement;
   });
 
-  const legend = data.map((d: any, i: any) => (
+  const legend = resultset.map((d: any, i: any) => (
     <div
       key={'legend-pt-' + i.toString()}
       className="colorBox wrapper"
       style={{
         backgroundColor: colors[i],
-        flexBasis: (formatNum(data[i]) + devidedWidth).toString() + '%',
+        flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%',
       }}
     >
       <div className="tooltip">
-        {data[i].metricpossiblevalues}
+        {resultset[i].metricpossiblevalues}
       </div>
       <div
         className="tickNums ticksTop tickPointer"
         style={{ width: '100%', textAlign: 'center' }}
       >
-        {i === 0 ? (
+        {resultset[i].metricpossible === indicatorPosition ? (
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Black_triangle.svg"
             style={{ width: '15px', height: '15px', margin: '-10px 50%' }}
@@ -283,11 +288,11 @@ export default function Superset2CustomChartBullet(
         style={{
           width: '100%',
           textAlign: 'center',
-          bottom: data[i].metricpossible.length > 20 ? '-30px' : '-20px',
-          fontSize: data[i].metricpossible.length > 20 ? '9px' : '9px',
+          bottom: resultset[i].metricpossible.length > 20 ? '-30px' : '-20px',
+          fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px',
         }}
       >
-        <div>{data[i].metricpossible}</div>
+        <div>{resultset[i].metricpossible}</div>
       </div>
     </div>
   ));

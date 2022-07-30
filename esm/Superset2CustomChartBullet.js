@@ -193,48 +193,51 @@ export default function Superset2CustomChartBullet(props) {
     data,
     height,
     width,
-    selectedMatrics,
-    colorScheme,
-    indicatorData
+    colorScheme
   } = props;
+
+  function creatUniqueArray() {
+    const unique = [];
+    const distinct = []; // const result = [];
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].metricpossible) {
+        if (!unique[data[i].metricpossible]) {
+          distinct.push(data[i]);
+          unique[data[i].metricpossible] = 1;
+        }
+      }
+    }
+
+    return distinct;
+  }
+
+  let indicatorPosition;
+  if (data[0].metricpossible) indicatorPosition = data.filter(d => d.metricpossible === data[0].metricvalue)[0].metricvalue;
+  const resultset = creatUniqueArray();
   const colorsValues = categorialSchemeRegistry.values();
   const filterColors = colorsValues.filter(c => c.id === colorScheme);
 
   if (filterColors[0]) {
     colors = [...filterColors[0].colors];
-    colors.length = data.length;
+    colors.length = resultset.length;
   } // const colorsArray = filterColors.length === 1 ? filterColors[0].colors : filterColors[1].colors;
 
 
-  const totalCount = data.reduce((initialValue, b) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num), 0);
-  const devidedWidth = totalCount <= 100 ? (100 - totalCount) / data.length : 0;
-
-  function getIndicator(selectedMatric) {
-    for (let dataIndex = 0; dataIndex < data.length; dataIndex++) {
-      for (let indicatorIndex = 0; indicatorIndex < indicatorData.length; indicatorIndex++) {
-        if (data[dataIndex][selectedMatric] === indicatorData[indicatorIndex][selectedMatric]) {
-          return indicatorData[indicatorIndex][selectedMatric];
-        }
-      }
-    }
-  }
-
-  let indicatorPosition = 0; // const indicatorPosition  = getIndicator(selectedMatrics);
-
+  const totalCount = resultset.reduce((initialValue, b) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num), 0);
+  const devidedWidth = totalCount <= 100 ? (100 - totalCount) / resultset.length : 0;
   domains = [];
 
   if (data[0].metricpossiblevalues) {
     domains = d3.extent(data, d => d.metricpossiblevalues);
-    indicatorPosition = getIndicator(selectedMatrics);
   } else {
     domains = d3.extent(data, d => d.sum__num);
-    indicatorPosition = getIndicator(selectedMatrics);
   }
 
   const colorScaleEQ = d3Scale.scaleQuantize().domain([d3.min(domains), d3.max(domains)]).range(data);
   const bins = colorScaleEQ.range().map(d => colorScaleEQ.invertExtent(d));
   const rootElem = /*#__PURE__*/createRef();
-  data.reduce((acc, d) => {
+  resultset.reduce((acc, d) => {
     const color = colorScaleEQ(d.metricpossiblevalues ? d.metricpossiblevalues : d.sum__num);
 
     if (acc[color]) {
@@ -259,22 +262,22 @@ export default function Superset2CustomChartBullet(props) {
 
   useEffect(() => {// const root = rootElem.current as HTMLElement;
   });
-  const legend = data.map((d, i) => /*#__PURE__*/React.createElement("div", {
+  const legend = resultset.map((d, i) => /*#__PURE__*/React.createElement("div", {
     key: 'legend-pt-' + i.toString(),
     className: "colorBox wrapper",
     style: {
       backgroundColor: colors[i],
-      flexBasis: (formatNum(data[i]) + devidedWidth).toString() + '%'
+      flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%'
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "tooltip"
-  }, data[i].metricpossiblevalues), /*#__PURE__*/React.createElement("div", {
+  }, resultset[i].metricpossiblevalues), /*#__PURE__*/React.createElement("div", {
     className: "tickNums ticksTop tickPointer",
     style: {
       width: '100%',
       textAlign: 'center'
     }
-  }, i === 0 ? /*#__PURE__*/React.createElement("img", {
+  }, resultset[i].metricpossible === indicatorPosition ? /*#__PURE__*/React.createElement("img", {
     src: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Black_triangle.svg",
     style: {
       width: '15px',
@@ -287,10 +290,10 @@ export default function Superset2CustomChartBullet(props) {
     style: {
       width: '100%',
       textAlign: 'center',
-      bottom: data[i].metricpossible.length > 20 ? '-30px' : '-20px',
-      fontSize: data[i].metricpossible.length > 20 ? '9px' : '9px'
+      bottom: resultset[i].metricpossible.length > 20 ? '-30px' : '-20px',
+      fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px'
     }
-  }, /*#__PURE__*/React.createElement("div", null, data[i].metricpossible))));
+  }, /*#__PURE__*/React.createElement("div", null, resultset[i].metricpossible))));
   return /*#__PURE__*/React.createElement(Styles, {
     ref: rootElem,
     boldText: props.boldText,

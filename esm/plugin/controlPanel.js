@@ -24,9 +24,7 @@ import { sections, sharedControls } from '@superset-ui/chart-controls';
 setupColors();
 const categoricalSchemeRegistry = getCategoricalSchemeRegistry();
 let arrayUniqueByKey = [...new Map(categoricalSchemeRegistry.values().map(item => [item.id, item])).values()];
-console.log("schemes", categoricalSchemeRegistry.getMap());
 arrayUniqueByKey = arrayUniqueByKey.filter(sc => sc.id.startsWith('_'));
-console.log("arrayUniqueByKey", arrayUniqueByKey);
 const config = {
   /**
    * The control panel is split into two tabs: "Query" and
@@ -118,19 +116,7 @@ const config = {
         // certain selections/types need to be enforced
         validators: []
       })
-    }],
-    /* [
-      {
-        name: 'organization',
-        config: {
-          ...sharedControls.columns,
-          label: t('Columns'),
-          description: t('Select orgnisation'),
-          
-        },
-      },
-    ], */
-    ['adhoc_filters'],
+    }], ['adhoc_filters'],
     /*  [
        {
          name: 'organization_name',

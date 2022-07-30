@@ -31,9 +31,7 @@ let arrayUniqueByKey = [
     categoricalSchemeRegistry.values().map((item: any) => [item.id, item]),
   ).values(),
 ];
-console.log("schemes", categoricalSchemeRegistry.getMap());
 arrayUniqueByKey = arrayUniqueByKey.filter(sc => sc.id.startsWith('_'))
-console.log("arrayUniqueByKey",arrayUniqueByKey);
 const config: ControlPanelConfig = {
   /**
    * The control panel is split into two tabs: "Query" and
@@ -138,17 +136,6 @@ const config: ControlPanelConfig = {
             },
           },
         ],
-        /* [
-          {
-            name: 'organization',
-            config: {
-              ...sharedControls.columns,
-              label: t('Columns'),
-              description: t('Select orgnisation'),
-              
-            },
-          },
-        ], */
         ['adhoc_filters'],
        /*  [
           {
