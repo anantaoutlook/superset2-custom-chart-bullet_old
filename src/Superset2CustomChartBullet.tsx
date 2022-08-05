@@ -54,9 +54,9 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
     display: flex;
     flex-wrap: nowrap;
     align-self: end;
-    height: 5vh;
+    height:25px;
     width: 100%;
-    margin: 20% 3% 0% 2%;
+    margin: 2%;
   }
 
   .colorBox {
@@ -90,7 +90,6 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
   .wrapper {
     text-transform: uppercase;
     color: #000;
-    cursor: help;
     font-size: 20px;
     margin: 0 auto;
     position: relative;
@@ -150,6 +149,16 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
     -ms-transform: translateY(0px);
     -o-transform: translateY(0px);
     transform: translateY(0px);
+  }
+  .text-value{
+    font-size: 12px;
+    margin-top: 13px;
+  }
+  .indicator{
+    width: 15px;
+    height: 13px;
+    position: absolute;
+    top: 3px;
   }
 
   /* IE can just show/hide with no transition */
@@ -271,6 +280,18 @@ export default function Superset2CustomChartBullet(
     }
     return 0;
   };
+  const getPecentage = (val: number) => {
+    const total = resultset.reduce(
+      (initialValue, b: any) =>
+        initialValue +
+        (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num),
+      0,
+    );
+    const percent = (val / total * 100);
+    console.log('percentage', percent);
+    return percent.toFixed(2);
+    // return Math.round((percent + Number.EPSILON) * 100) / 100;
+  }
   useEffect(() => {
     // const root = rootElem.current as HTMLElement;
   });
@@ -284,27 +305,28 @@ export default function Superset2CustomChartBullet(
         flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%',
       }}
     >
-      <div className="tooltip">{resultset[i].metricpossiblevalues}</div>
+      {/* <div className="tooltip">{resultset[i].metricpossiblevalues}</div> */}
       <div
         className="tickNums ticksTop tickPointer"
         style={{ width: '100%', textAlign: 'center' }}
-      >
+      > 
         {resultset[i].metricpossible === indicatorPosition ? (
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Black_triangle.svg"
-            style={{ width: '15px', height: '15px', margin: '-10px 50%' }}
+            className='indicator'
             alt="pointer"
           />
         ) : (
           ''
         )}
+        <div className='text-value'>{parseFloat(getPecentage(resultset[i].metricpossiblevalues)) > 0 ? getPecentage(resultset[i].metricpossiblevalues) : 0}%</div>
       </div>
       <div
         className="tickNums tickBottom"
         style={{
           width: '100%',
           textAlign: 'center',
-          bottom: resultset[i].metricpossible.length > 20 ? '-30px' : '-20px',
+          top: '36px',
           fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px',
         }}
       >
@@ -325,3 +347,4 @@ export default function Superset2CustomChartBullet(
     </Styles>
   );
 }
+ 

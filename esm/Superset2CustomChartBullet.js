@@ -48,9 +48,9 @@ const Styles = styled.div(_t || (_t = _`
     display: flex;
     flex-wrap: nowrap;
     align-self: end;
-    height: 5vh;
+    height:25px;
     width: 100%;
-    margin: 20% 3% 0% 2%;
+    margin: 2%;
   }
 
   .colorBox {
@@ -83,7 +83,6 @@ const Styles = styled.div(_t || (_t = _`
   .wrapper {
     text-transform: uppercase;
     color: #000;
-    cursor: help;
     font-size: 20px;
     margin: 0 auto;
     position: relative;
@@ -143,6 +142,16 @@ const Styles = styled.div(_t || (_t = _`
     -ms-transform: translateY(0px);
     -o-transform: translateY(0px);
     transform: translateY(0px);
+  }
+  .text-value{
+    font-size: 12px;
+    margin-top: 13px;
+  }
+  .indicator{
+    width: 15px;
+    height: 13px;
+    position: absolute;
+    top: 3px;
   }
 
   /* IE can just show/hide with no transition */
@@ -278,6 +287,13 @@ export default function Superset2CustomChartBullet(props) {
     return 0;
   };
 
+  const getPecentage = val => {
+    const total = resultset.reduce((initialValue, b) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num), 0);
+    const percent = val / total * 100;
+    console.log('percentage', percent);
+    return percent.toFixed(2); // return Math.round((percent + Number.EPSILON) * 100) / 100;
+  };
+
   useEffect(() => {// const root = rootElem.current as HTMLElement;
   });
   const legend = resultset.map((d, i) => /*#__PURE__*/React.createElement("div", {
@@ -288,8 +304,6 @@ export default function Superset2CustomChartBullet(props) {
       flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%'
     }
   }, /*#__PURE__*/React.createElement("div", {
-    className: "tooltip"
-  }, resultset[i].metricpossiblevalues), /*#__PURE__*/React.createElement("div", {
     className: "tickNums ticksTop tickPointer",
     style: {
       width: '100%',
@@ -297,18 +311,16 @@ export default function Superset2CustomChartBullet(props) {
     }
   }, resultset[i].metricpossible === indicatorPosition ? /*#__PURE__*/React.createElement("img", {
     src: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Black_triangle.svg",
-    style: {
-      width: '15px',
-      height: '15px',
-      margin: '-10px 50%'
-    },
+    className: "indicator",
     alt: "pointer"
-  }) : ''), /*#__PURE__*/React.createElement("div", {
+  }) : '', /*#__PURE__*/React.createElement("div", {
+    className: "text-value"
+  }, parseFloat(getPecentage(resultset[i].metricpossiblevalues)) > 0 ? getPecentage(resultset[i].metricpossiblevalues) : 0, "%")), /*#__PURE__*/React.createElement("div", {
     className: "tickNums tickBottom",
     style: {
       width: '100%',
       textAlign: 'center',
-      bottom: resultset[i].metricpossible.length > 20 ? '-30px' : '-20px',
+      top: '36px',
       fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px'
     }
   }, /*#__PURE__*/React.createElement("div", null, resultset[i].metricpossible))));
