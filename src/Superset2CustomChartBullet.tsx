@@ -39,6 +39,8 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
   border-radius: ${({ theme }) => theme.gridUnit * 2}px;
   height: ${({ height }) => height}px;
   width: ${({ width }) => width}px;
+  position: relative;
+  overflow: hidden;
 
   h3 {
     /* You can use your props to control CSS! */
@@ -56,7 +58,10 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
     align-self: end;
     height:25px;
     width: 100%;
-    margin: 2%;
+    position: absolute;
+    right: 0%;
+    left: 0%;
+    top: ${({ height }) => (height/2.5).toFixed(2)}px;
   }
 
   .colorBox {
@@ -152,7 +157,7 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
   }
   .text-value{
     font-size: 12px;
-    margin-top: 13px;
+    margin-top: 16px;
   }
   .indicator{
     width: 15px;
@@ -288,7 +293,6 @@ export default function Superset2CustomChartBullet(
       0,
     );
     const percent = (val / total * 100);
-    console.log('percentage', percent);
     return percent.toFixed(2);
     // return Math.round((percent + Number.EPSILON) * 100) / 100;
   }
@@ -326,7 +330,7 @@ export default function Superset2CustomChartBullet(
         style={{
           width: '100%',
           textAlign: 'center',
-          top: '36px',
+          top: '30px',
           fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px',
         }}
       >

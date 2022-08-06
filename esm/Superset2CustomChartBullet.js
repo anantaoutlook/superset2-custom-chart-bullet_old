@@ -35,6 +35,8 @@ const Styles = styled.div(_t || (_t = _`
   border-radius: ${0}px;
   height: ${0}px;
   width: ${0}px;
+  position: relative;
+  overflow: hidden;
 
   h3 {
     /* You can use your props to control CSS! */
@@ -50,7 +52,10 @@ const Styles = styled.div(_t || (_t = _`
     align-self: end;
     height:25px;
     width: 100%;
-    margin: 2%;
+    position: absolute;
+    right: 0%;
+    left: 0%;
+    top: ${0}px;
   }
 
   .colorBox {
@@ -145,7 +150,7 @@ const Styles = styled.div(_t || (_t = _`
   }
   .text-value{
     font-size: 12px;
-    margin-top: 13px;
+    margin-top: 16px;
   }
   .indicator{
     width: 15px;
@@ -180,6 +185,8 @@ const Styles = styled.div(_t || (_t = _`
   theme,
   boldText
 }) => theme.typography.weights[boldText ? 'bold' : 'normal'], ({
+  height
+}) => (height / 2.5).toFixed(2), ({
   theme,
   headerFontSize,
   height
@@ -290,7 +297,6 @@ export default function Superset2CustomChartBullet(props) {
   const getPecentage = val => {
     const total = resultset.reduce((initialValue, b) => initialValue + (b.metricpossiblevalues ? b.metricpossiblevalues : b.sum__num), 0);
     const percent = val / total * 100;
-    console.log('percentage', percent);
     return percent.toFixed(2); // return Math.round((percent + Number.EPSILON) * 100) / 100;
   };
 
@@ -320,7 +326,7 @@ export default function Superset2CustomChartBullet(props) {
     style: {
       width: '100%',
       textAlign: 'center',
-      top: '36px',
+      top: '30px',
       fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px'
     }
   }, /*#__PURE__*/React.createElement("div", null, resultset[i].metricpossible))));
