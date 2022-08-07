@@ -50,7 +50,7 @@ const Styles = styled.div(_t || (_t = _`
     display: flex;
     flex-wrap: nowrap;
     align-self: end;
-    height:25px;
+    height: 25px;
     width: 100%;
     position: absolute;
     right: 0%;
@@ -85,69 +85,7 @@ const Styles = styled.div(_t || (_t = _`
     height: ${0}px;
   }
 
-  .wrapper {
-    text-transform: uppercase;
-    color: #000;
-    font-size: 20px;
-    margin: 0 auto;
-    position: relative;
-    text-align: center;
-    -webkit-transform: translateZ(0); /* webkit flicker fix */
-    -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
-  }
 
-  .wrapper .tooltip {
-    background: #fff;
-    bottom: 100%;
-    color: #000;
-    display: block;
-    left: 0;
-    margin-bottom: 15px;
-    opacity: 0;
-    padding: 10px;
-    text-align: center;
-    pointer-events: none;
-    position: absolute;
-    width: 100px;
-    border-radius: 5px;
-    border: solid #000 1px;
-    -webkit-transform: translateY(10px);
-    -moz-transform: translateY(10px);
-    -ms-transform: translateY(10px);
-    -o-transform: translateY(10px);
-    transform: translateY(10px);
-    -webkit-transition: all 0.25s ease-out;
-    -moz-transition: all 0.25s ease-out;
-    -ms-transition: all 0.25s ease-out;
-    -o-transition: all 0.25s ease-out;
-    transition: all 0.25s ease-out;
-    -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
-  }
-
-  /* This bridges the gap so you can mouse into the tooltip without it disappearing */
-  .wrapper .tooltip:before {
-    bottom: -20px;
-    content: ' ';
-    display: block;
-    height: 20px;
-    left: 0;
-    position: absolute;
-    width: 100%;
-  }
-
-  .wrapper:hover .tooltip {
-    opacity: 1;
-    pointer-events: auto;
-    -webkit-transform: translateY(0px);
-    -moz-transform: translateY(0px);
-    -ms-transform: translateY(0px);
-    -o-transform: translateY(0px);
-    transform: translateY(0px);
-  }
   .text-value{
     font-size: 12px;
     margin-top: 16px;
@@ -186,7 +124,7 @@ const Styles = styled.div(_t || (_t = _`
   boldText
 }) => theme.typography.weights[boldText ? 'bold' : 'normal'], ({
   height
-}) => (height / 2.5).toFixed(2), ({
+}) => parseFloat((height / 3.5).toFixed(2)) < 60 ? 15 : (height / 2.5).toFixed(2), ({
   theme,
   headerFontSize,
   height
@@ -304,7 +242,7 @@ export default function Superset2CustomChartBullet(props) {
   });
   const legend = resultset.map((d, i) => /*#__PURE__*/React.createElement("div", {
     key: 'legend-pt-' + i.toString(),
-    className: "colorBox wrapper",
+    className: "colorBox",
     style: {
       backgroundColor: colors[i],
       flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%'
