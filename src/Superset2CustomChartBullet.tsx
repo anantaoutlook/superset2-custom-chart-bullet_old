@@ -56,35 +56,39 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
     display: flex;
     flex-wrap: nowrap;
     align-self: end;
-    height: 25px;
+    height: ${({ height }) => parseFloat((height/7).toFixed(2)) < 25 ? 25 : (height/7).toFixed(2)}px;
     width: 100%;
     position: absolute;
     right: 0%;
     left: 0%;
-    top: ${({ height }) => parseFloat((height/3.5).toFixed(2)) < 60 ? 15 : (height/2.5).toFixed(2)}px;
+    top: ${({ height }) => parseFloat((height/2.5).toFixed(2)) < 60 ? 15 : (height/2.5).toFixed(2)}px;
   }
 
   .colorBox {
     display: flex;
     position: relative;
+    height: ${({ height }) => parseFloat((height/7).toFixed(2)) < 25 ? 25 : (height/7).toFixed(2)}px;
   }
 
   .tickNums {
     font-weight: normal;
     position: absolute;
-    bottom: -20px;
     font-size: 13px;
   }
 
-  .ticksBottom {
-    bottom: -20px;
+  .tickBottom {
+    top:  ${({ height }) => parseFloat((height/7).toFixed(2)) < 25 ? 30 : parseFloat((height/7).toFixed(2))}px;
+    font-weight: normal;
+    position: absolute;
+    font-size: 13px;
   }
 
   .ticksTop {
     top: -12px;
-  }
-  .tickPointer {
     text-align: center;
+    font-weight: normal;
+    position: absolute;
+    font-size: 13px;
   }
 
   pre {
@@ -95,7 +99,7 @@ const Styles = styled.div<Superset2CustomChartBulletStylesProps>`
 
   .text-value{
     font-size: 12px;
-    margin-top: 16px;
+    margin-top:  ${({ height }) => (parseFloat((height/6.5).toFixed(2)) / 2) < 15 ? 15 : (parseFloat((height/6.5).toFixed(2)) / 2)}px;
   }
   .indicator{
     width: 15px;
@@ -249,7 +253,7 @@ export default function Superset2CustomChartBullet(
     >
       {/* <div className="tooltip">{resultset[i].metricpossiblevalues}</div> */}
       <div
-        className="tickNums ticksTop tickPointer"
+        className="tickNums ticksTop"
         style={{ width: '100%', textAlign: 'center' }}
       > 
         {resultset[i].metricpossible === indicatorPosition ? (
@@ -268,7 +272,7 @@ export default function Superset2CustomChartBullet(
         style={{
           width: '100%',
           textAlign: 'center',
-          top: '30px',
+          // top: '30px',
           fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px',
         }}
       >

@@ -50,7 +50,7 @@ const Styles = styled.div(_t || (_t = _`
     display: flex;
     flex-wrap: nowrap;
     align-self: end;
-    height: 25px;
+    height: ${0}px;
     width: 100%;
     position: absolute;
     right: 0%;
@@ -61,24 +61,28 @@ const Styles = styled.div(_t || (_t = _`
   .colorBox {
     display: flex;
     position: relative;
+    height: ${0}px;
   }
 
   .tickNums {
     font-weight: normal;
     position: absolute;
-    bottom: -20px;
     font-size: 13px;
   }
 
-  .ticksBottom {
-    bottom: -20px;
+  .tickBottom {
+    top:  ${0}px;
+    font-weight: normal;
+    position: absolute;
+    font-size: 13px;
   }
 
   .ticksTop {
     top: -12px;
-  }
-  .tickPointer {
     text-align: center;
+    font-weight: normal;
+    position: absolute;
+    font-size: 13px;
   }
 
   pre {
@@ -88,7 +92,7 @@ const Styles = styled.div(_t || (_t = _`
 
   .text-value{
     font-size: 12px;
-    margin-top: 16px;
+    margin-top:  ${0}px;
   }
   .indicator{
     width: 15px;
@@ -124,11 +128,19 @@ const Styles = styled.div(_t || (_t = _`
   boldText
 }) => theme.typography.weights[boldText ? 'bold' : 'normal'], ({
   height
-}) => parseFloat((height / 3.5).toFixed(2)) < 60 ? 15 : (height / 2.5).toFixed(2), ({
+}) => parseFloat((height / 7).toFixed(2)) < 25 ? 25 : (height / 7).toFixed(2), ({
+  height
+}) => parseFloat((height / 2.5).toFixed(2)) < 60 ? 15 : (height / 2.5).toFixed(2), ({
+  height
+}) => parseFloat((height / 7).toFixed(2)) < 25 ? 25 : (height / 7).toFixed(2), ({
+  height
+}) => parseFloat((height / 7).toFixed(2)) < 25 ? 30 : parseFloat((height / 7).toFixed(2)), ({
   theme,
   headerFontSize,
   height
-}) => height - theme.gridUnit * 12 - theme.typography.sizes[headerFontSize]);
+}) => height - theme.gridUnit * 12 - theme.typography.sizes[headerFontSize], ({
+  height
+}) => parseFloat((height / 6.5).toFixed(2)) / 2 < 15 ? 15 : parseFloat((height / 6.5).toFixed(2)) / 2);
 /**
  * ******************* WHAT YOU CAN BUILD HERE *******************
  *  In essence, a chart is given a few key ingredients to work with:
@@ -248,7 +260,7 @@ export default function Superset2CustomChartBullet(props) {
       flexBasis: (formatNum(resultset[i]) + devidedWidth).toString() + '%'
     }
   }, /*#__PURE__*/React.createElement("div", {
-    className: "tickNums ticksTop tickPointer",
+    className: "tickNums ticksTop",
     style: {
       width: '100%',
       textAlign: 'center'
@@ -264,7 +276,7 @@ export default function Superset2CustomChartBullet(props) {
     style: {
       width: '100%',
       textAlign: 'center',
-      top: '30px',
+      // top: '30px',
       fontSize: resultset[i].metricpossible.length > 20 ? '9px' : '9px'
     }
   }, /*#__PURE__*/React.createElement("div", null, resultset[i].metricpossible))));
